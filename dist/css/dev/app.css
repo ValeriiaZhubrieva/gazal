@@ -43,6 +43,7 @@ textarea {
 input,
 textarea {
     width: 100%;
+    outline: none;
 }
 label {
     display: inline-block;
@@ -436,6 +437,10 @@ body {
   align-items: center;
   gap: 4px;
 }
+.options-stars__item.active .options-stars__star path {
+  stroke: var(--star-color);
+  fill: var(--star-color);
+}
 .options-stars__input {
   width: 0;
   height: 0;
@@ -444,10 +449,6 @@ body {
 }
 .options-stars__input:focus-visible ~ .options-stars__star {
   outline: 1px solid #000;
-}
-.options-stars__input:checked ~ .options-stars__star path {
-  stroke: var(--star-color);
-  fill: var(--star-color);
 }
 .options-stars__text {
   font-size: 16px;
@@ -1261,7 +1262,34 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 	right: 0;
 	left: 0;
 }
-.header {
+input[type=text],
+input[type=email],
+input[type=tel],
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.input {
+  border-radius: 0 !important;
+  width: 100%;
+  display: block;
+  padding: 10px;
+  border: 1px solid #eee;
+  caret-color: inherit;
+}
+.input[placeholder]:not([data-fls-placeholder-nohiden])::placeholder {
+  transition: opacity 0.3s;
+}
+.input[placeholder]:not([data-fls-placeholder-nohiden]):focus::placeholder {
+  opacity: 0;
+}
+
+textarea.input {
+  resize: vertical;
+  padding: 0px 0px;
+}.header {
   background-color: var(--white-color);
 }
 .header__top {
@@ -1378,6 +1406,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 .header__bottom {
   background-color: var(--blue-color);
   color: var(--white-color);
+  position: relative;
 }
 .header__bottom .header__container {
   display: flex;
@@ -1567,15 +1596,16 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   background-color: var(--accent-active-color);
 }
 .catalog-block__dropdown {
-  position: fixed;
+  position: absolute;
+  top: 100%;
   left: 0;
   z-index: 30;
   width: 100%;
-  background-color: var(--white-color);
   color: var(--main-color);
   visibility: hidden;
   opacity: 0;
-  transition: all 0.3s;
+  pointer-events: none;
+  transition: visibility 0.3s, opacity 0.3s;
 }
 .catalog-open .catalog-block__dropdown {
   transform: rotateX(0deg);
@@ -1586,6 +1616,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   position: relative;
   z-index: 2;
   max-width: 1362px;
+  width: 100%;
   height: 100%;
   padding: 0 10px;
   margin: 0 auto;
@@ -1615,7 +1646,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   border: 1px solid var(--line-color-disabled-color);
   max-height: 100%;
   overflow: hidden auto;
-  padding-bottom: 10px;
+  pointer-events: all;
 }
 .catalog-block__item:not(:last-child) {
   border-bottom: 1px solid var(--line-color-disabled-color);
@@ -1623,6 +1654,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 .catalog-block__item.is-open .subcatalog {
   visibility: visible;
   opacity: 1;
+  pointer-events: all;
 }
 .catalog-block__item.is-open .catalog-block__link {
   background-color: var(--status-color);
@@ -1660,16 +1692,15 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   left: 289px;
   right: 0;
   bottom: 0;
-  height: 100%;
+  max-height: 100%;
   overflow: hidden auto;
   padding: 15px;
-  display: grid;
   visibility: hidden;
   opacity: 0;
+  pointer-events: none;
   background-color: var(--white-color);
   border-radius: 4px;
   border: 1px solid var(--line-color-disabled-color);
-  transition: all 0.3s;
 }
 .subcatalog__list {
   display: grid;
@@ -1997,11 +2028,15 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 }
 .product-table__head {
   display: grid;
-  grid-template-columns: 403px 202px 1fr;
+}
+.product-table__head-row {
+  display: grid;
+  grid-template-columns: minmax(290px, 403px) 202px repeat(6, minmax(110px, 1fr));
   background-color: var(--table-fill-color);
   border-bottom: 1px solid var(--line-color-disabled-color);
 }
 .product-table__head-item {
+  text-align: left;
   padding: 12px 20px;
   font-weight: 700;
   font-size: 20px;
@@ -2009,6 +2044,15 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 }
 .product-table__head-item:not(:last-child) {
   border-right: 1px solid var(--line-color-disabled-color);
+}
+.product-table__head-item--6-col {
+  grid-column: span 6;
+}
+.product-table__head-item--2-col {
+  grid-column: span 2;
+}
+.product-table__head-item--4-col {
+  grid-column: span 4;
 }
 .product-table__head-item.text-center {
   text-align: center;
@@ -2018,7 +2062,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
 }
 .product-table__row {
   display: grid;
-  grid-template-columns: 403px 202px repeat(6, 116px);
+  grid-template-columns: minmax(290px, 403px) 202px repeat(6, minmax(110px, 1fr));
 }
 .product-table__row:nth-child(odd) {
   background-color: var(--table-fill-color);
@@ -2670,10 +2714,16 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
     height: 32px;
   }
   .catalog-block__dropdown {
-    top: 0 !important;
+    position: fixed;
+    top: 0;
     left: -100%;
     height: 100% !important;
+    pointer-events: all;
+    background-color: var(--white-color);
     z-index: 40;
+    visibility: visible;
+    opacity: 1;
+    transition: left 0.3s;
   }
   .catalog-open .catalog-block__dropdown {
     left: 0;
@@ -2723,6 +2773,7 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
   .subcatalog {
     position: static;
     left: 0;
+    height: 100% !important;
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.3s, padding 0.3s;
@@ -3020,10 +3071,10 @@ body:not(.lg-from-hash) .lg-outer.lg-start-zoom .lg-item:not(.lg-zoomable).lg-co
     color: var(--accent-hover-color);
   }
   .header__cart:hover {
-    color: var(--accent-hover-color);
+    color: var(--star-color);
   }
   .header__cart:hover .header__cart-count {
-    background-color: var(--accent-hover-color);
+    background-color: var(--star-color);
   }
   .header__catalog-link:hover {
     color: var(--accent-hover-color);
