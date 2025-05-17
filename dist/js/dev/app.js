@@ -10493,6 +10493,11 @@ function catalogInit() {
       closeCatalog();
     }
   });
+  document.addEventListener("mouseout", function(e) {
+    if (!catalogBlock.contains(e.target)) {
+      closeCatalog();
+    }
+  });
   catalogBlock.addEventListener("click", function(e) {
     e.stopPropagation();
   });
